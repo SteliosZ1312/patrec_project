@@ -48,6 +48,11 @@ parser.add_argument("--run-name", type=str, default=None,
 parser.add_argument("--cluster-config", default=[], action="append",
     help="Override shared cluster config entries. Specify as `key=value`.")
 
+# MY CODE#
+parser.add_argument("--max-epochs", type=int, default=None,
+    help="Maximum number of training epochs.")
+##########
+
 args = parser.parse_args()
 
 
@@ -67,7 +72,10 @@ else:
         dataset=args.dataset,
         model=args.model,
         gae=args.is_gae,
-        standalone=True
+        standalone=True,
+        # MY CODE #
+        max_epochs=args.max_epochs
+        ###########
     )
     
     cfg = process_cfg_args(cfg, args.config, args)

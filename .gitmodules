@@ -1,0 +1,3 @@
+[submodule "layer6ai-labs-code"]
+	path = layer6ai-labs-code
+	url = https://github.com/layer6ai-labs/UoMH

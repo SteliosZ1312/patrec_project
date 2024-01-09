@@ -50,7 +50,7 @@ def process_cfg_args(cfg, cfg_args, args):
     cfg = add_cluster_cfg_id_metric(cfg, args)
     return cfg
 
-def get_single_config(dataset, model, gae, standalone):
+def get_single_config(dataset, model, gae, standalone, max_epochs): # max_epochs: My addition
     assert dataset in _VALID_DATASETS, \
         f"Unknown dataset {dataset}"
 
@@ -73,6 +73,9 @@ def get_single_config(dataset, model, gae, standalone):
         "model": model,
 
         "gae": gae,
+        # MY CODE #
+        "max_epochs": max_epochs,
+        ###########
 
         **model_config_function(dataset, standalone)
     }

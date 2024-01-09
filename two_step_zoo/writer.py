@@ -62,12 +62,12 @@ class Writer:
 
         sys.stdout = Tee(
             primary_file=self._STDOUT,
-            secondary_file=open(os.path.join(logdir, "stdout"), "a")
+            secondary_file = open(os.path.join(logdir, "stdout"), "a", encoding='utf-8')
         )
 
         sys.stderr = Tee(
             primary_file=self._STDERR,
-            secondary_file=open(os.path.join(logdir, "stderr"), "a")
+            secondary_file = open(os.path.join(logdir, "stdout"), "a", encoding='utf-8')
         )
 
     def write_scalar(self, tag, scalar_value, global_step=None):

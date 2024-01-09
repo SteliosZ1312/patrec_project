@@ -1,0 +1,49 @@
+C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\torch\nn\init.py:412: UserWarning: Initializing zero-element tensors is a no-op
+  warnings.warn("Initializing zero-element tensors is a no-op")
+Training[0/421]   0%|                                                                                                                      [00:00<?]Traceback (most recent call last):
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1192, in __iter__
+    self.update(n - last_print_n)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1243, in update
+    self.refresh(lock_args=self.lock_args)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1348, in refresh
+    self.display()
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1496, in display
+    self.sp(self.__str__() if msg is None else msg)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 462, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 455, in fp_write
+    fp.write(str(s))
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\utils.py", line 195, in inner
+    return func(*args, **kwargs)
+  File "C:\Users\steli\github\patrec_project\UoMH\two_step_zoo\writer.py", line 37, in write
+    self.secondary_file.write(data)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\u258e' in position 22: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\steli\github\patrec_project\UoMH\single_main.py", line 170, in <module>
+    trainer.train()
+  File "C:\Users\steli\github\patrec_project\UoMH\two_step_zoo\trainers\single_trainer.py", line 105, in train
+    self.train_for_epoch()
+  File "C:\Users\steli\github\patrec_project\UoMH\two_step_zoo\trainers\single_trainer.py", line 146, in train_for_epoch
+    for j, (batch, label, idx) in pbar:
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1197, in __iter__
+    self.close()
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1303, in close
+    self.display(pos=0)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 1496, in display
+    self.sp(self.__str__() if msg is None else msg)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 462, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\std.py", line 455, in fp_write
+    fp.write(str(s))
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\site-packages\tqdm\utils.py", line 195, in inner
+    return func(*args, **kwargs)
+  File "C:\Users\steli\github\patrec_project\UoMH\two_step_zoo\writer.py", line 37, in write
+    self.secondary_file.write(data)
+  File "C:\Users\steli\anaconda3\envs\UoMH\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\u258e' in position 22: character maps to <undefined>

@@ -290,6 +290,39 @@ def get_2d_data(data, size):
 
     return torch.tensor(data, dtype=torch.get_default_dtype())
 
+def generate_sphere_annulus_dataset(size=1000, sphere_offset=[0.0, 0.0, 2.0], annulus_offset=[0.0, 0.0], annulus_radius=1.0):
+    # Generate points for the sphere
+    sphere_mu = np.zeros(3)
+    sphere_sigma = np.diag(np.ones(3))
+    sphere_points = np.random.multivariate_normal(sphere_mu, sphere_sigma, size)
+    sphere_points /= np.linalg.norm(sphere_points, axis=1)[:, None]
+    sphere_points += np.array(sphere_offset)
+
+    # Generate points for the annulus
+    annulus_theta = np.random.uniform(0.0, 2 * np.pi, size)
+    annulus_x = annulus_radius * np.cos(annulus_theta) + annulus_offset[0]
+    annulus_y = annulus_radius * np.sin(annulus_theta) + annulus_offset[1]
+    
+    # Ensure annulus_points has size 3 along dimension 1
+    annulus_points = np.column_stack((annulus_x, annulus_y, np.zeros(size)))
+
+    # Combine points from the sphere and annulus
+    combined_points = np.vstack((sphere_points, annulus_points))
+    combined_labels = np.concatenate((np.zeros(size), np.ones(size)))
+
+    # Shuffle the combined dataset
+    combined_data = util_shuffle(np.column_stack((combined_points, combined_labels)))
+
+    # Extract features and labels
+    combined_features = combined_data[:, :-1]
+    combined_labels = combined_data[:, -1]
+
+    # Create a PyTorch tensor for features and labels
+    combined_features_tensor = torch.Tensor(combined_features).float()
+    combined_labels_tensor = torch.Tensor(combined_labels).long()
+
+    return combined_features_tensor, combined_labels_tensor
+
 
 def get_simple_datasets(name):
     train_dset = SupervisedDataset(name, "train", get_2d_data(name, size=10000))
