@@ -25,7 +25,7 @@ class Evaluator:
 
     def evaluate(self, dataloader, metric, cache=None):
         assert metric in metric_fn_dict, f"Metric name {metric} not present in `metrics.py`"
-      
+
         metric_fn = metric_fn_dict[metric]
         metric_fn_kwargs = self.metric_kwargs.get(metric) or {}
         self.module.eval()

@@ -22,6 +22,21 @@ class ClassClusterer(Clusterer):
     clusterer_name = "class"
 
     def set_partitions(self, train_dl, valid_dl, test_dl):
-        for cidx in range(len(self.partitions)):
+        """
+        for each class:
+            for each dataset split:
+                maps index of record with target that matches class
+        
+        self.partitions now is:
+        [
+            {
+                "train" : [class1_train_id1, class1_train_id2, ...],
+                "valid" : [class1_valid_id1, class1_valid_id2, ...],
+                "test"  : [class1_test_id1,  class1_test_id2,  ...]
+            },
+            ...
+        ]
+        """
+        for cidx in range(len(self.partitions)):    # cidx -> class index
             for dl,split in zip([train_dl, valid_dl, test_dl],["train", "valid", "test"]):
                 self.partitions[cidx][split] =  [i for i,x in enumerate(dl.dataset.targets) if x == cidx]

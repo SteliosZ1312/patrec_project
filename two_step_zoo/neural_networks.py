@@ -61,8 +61,8 @@ class MLP(BaseNetworkClass):
         if self.conditioning_dimension > 0:
             conditioning_vector = idxs_to_one_hot(conditioning, self.conditioning_dimension)
             x = torch.cat((x,conditioning_vector), 1)
-
-        return self._get_correct_nn_output_format(self.net(x), split_dim=-1)
+        output = self._get_correct_nn_output_format(self.net(x), split_dim=-1)
+        return output
 
 
 class BaseCNNClass(BaseNetworkClass):

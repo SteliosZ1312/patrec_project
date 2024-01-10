@@ -92,7 +92,7 @@ class GaussianVAE(GeneralizedAutoEncoder, DensityEstimator):
         z = diagonal_gaussian_sample(mu_z, torch.exp(log_sigma_z))
         mu_x, log_sigma_x = self.decode_to_transformed(z, conditioning=conditioning)
         log_sigma_x =  torch.full(log_sigma_x.shape, math.log(1)).to(log_sigma_x.device) # HACK
-
+        
         log_p_z = self.get_log_p_z(z)
         
         log_p_x_given_z = diagonal_gaussian_log_prob(

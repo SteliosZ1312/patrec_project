@@ -8,6 +8,28 @@ import pdb
 
 class Clusterer():
     def __init__(self, cfg, writer, device, transforms):
+        """     
+        self.partitions: One dictionary for each cluster
+        [
+            {
+                "train" : [],
+                "valid" : [],
+                "test"  : []
+            },
+            {
+                "train" : [],
+                "valid" : [],
+                "test"  : []
+            },
+            ...
+            {
+                "train" : [],
+                "valid" : [],
+                "test"  : []
+            }
+        ]
+        """
+
         self.partitions = [
             {split: [] for split in self.loader_splits}
             for _ in range(cfg["num_clusters"])
@@ -176,6 +198,7 @@ class Clusterer():
         self.load_clusters()
 
         if not self.has_partitions:
+            
             print("Running clusterer")
             self.set_partitions(train_dl, valid_dl, test_dl)
 
