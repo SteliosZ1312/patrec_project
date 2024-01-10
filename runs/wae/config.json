@@ -1,0 +1,97 @@
+{
+    "flatten": false,
+    "denoising_sigma": null,
+    "dequantize": false,
+    "scale_data": true,
+    "whitening_transform": false,
+    "optimizer": "adam",
+    "lr": null,
+    "use_lr_scheduler": null,
+    "max_epochs": 300,
+    "max_grad_norm": 10,
+    "conditioning": null,
+    "conditioning_dimension": 0,
+    "early_stopping_metric": null,
+    "max_bad_valid_epochs": 30,
+    "make_valid_loader": true,
+    "valid_fraction": 0.1,
+    "lr_scheduler": "cosine",
+    "lr_scheduler_step": 100,
+    "lr_scheduler_gamma": 0.1,
+    "valid_metrics": [
+        "l2_reconstruction_error"
+    ],
+    "test_metrics": [
+        "l2_reconstruction_error"
+    ],
+    "device": "cuda",
+    "train_batch_size": 128,
+    "valid_batch_size": 128,
+    "test_batch_size": 128,
+    "data_root": "data/",
+    "logdir_root": "runs/",
+    "class_ind": -1,
+    "transforms": null,
+    "dataset": "mnist",
+    "model": "wae",
+    "gae": true,
+    "latent_dim": 20,
+    "discriminator_hidden_dims": [
+        256,
+        256
+    ],
+    "_lambda": 10.0,
+    "sigma": 1.0,
+    "disc_lr": 0.0005,
+    "rec_lr": 0.001,
+    "use_disc_lr_scheduler": false,
+    "use_rec_lr_scheduler": false,
+    "base_distribution": null,
+    "num_mixture_components": 10,
+    "distribution_mean_spacing": 1,
+    "encoder_net": "cnn",
+    "encoder_hidden_channels": [
+        64,
+        64,
+        32,
+        32
+    ],
+    "encoder_kernel_size": [
+        3,
+        3,
+        3,
+        3
+    ],
+    "encoder_stride": [
+        1,
+        1,
+        1,
+        1
+    ],
+    "decoder_net": "cnn",
+    "decoder_hidden_channels": [
+        32,
+        32,
+        64,
+        64
+    ],
+    "decoder_kernel_size": [
+        3,
+        3,
+        3,
+        3
+    ],
+    "decoder_stride": [
+        1,
+        1,
+        1,
+        1
+    ],
+    "train_dataset_size": 54000,
+    "data_shape": [
+        1,
+        28,
+        28
+    ],
+    "data_dim": 784
+}
