@@ -1,3 +1,4 @@
 {
-    "l2_reconstruction_error": 20.404382705688477
+    "fid": 99.13745306266327,
+    "l2_reconstruction_error": 20.40438461303711
 }

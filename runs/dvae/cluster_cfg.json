@@ -14,16 +14,15 @@
     "eval_every_k": true,
     "latent_k": 10,
     "pfix": true,
-    "metric_dataset_save": "2024-01-10 19:26:00.649596",
-    "cluster_id_metric_dataset_save": "2024-01-10 19:26:00.649596",
-    "clustered_id_samples_save": "2024-01-10 19:26:00.649596",
+    "metric_dataset_save": "2024-01-14 16:45:26.762574",
+    "cluster_id_metric_dataset_save": "2024-01-14 16:45:26.762589",
+    "clustered_id_samples_save": "2024-01-14 16:45:26.762592",
     "memory_efficient": false,
     "module_save_dir": "memory_efficient_dump",
     "valid_metrics": [
         "l2_reconstruction_error"
     ],
     "test_metrics": [
-        "l2_reconstruction_error",
         "fid"
     ]
 }

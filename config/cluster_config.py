@@ -27,5 +27,5 @@ def get_cluster_config(dataset):
         "module_save_dir": "memory_efficient_dump",
 
         "valid_metrics": ["l2_reconstruction_error"],
-        "test_metrics": ["l2_reconstruction_error", "fid"]
+        "test_metrics": ["fid"]
     }

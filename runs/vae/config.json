@@ -25,7 +25,7 @@
         "l2_reconstruction_error",
         "fid"
     ],
-    "device": "cpu",
+    "device": "cuda",
     "train_batch_size": 128,
     "valid_batch_size": 128,
     "test_batch_size": 128,
