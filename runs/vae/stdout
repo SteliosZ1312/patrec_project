@@ -610,4 +610,45 @@ C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torchvision\models\_utils.p
 Missing keys in module: [] Unexpected keys in module: []
 Loaded vae checkpoint `latest' after epoch 100
 Testing {'fid', 'l2_reconstruction_error'} for vae
-Getting generated features:   0%|                                                                                                                                           | 0/421 [00:00<?, ?it/s](Pdb) 
+Getting generated features:   0%|                                                                                                                                           | 0/421 [00:00<?, ?it/s](Pdb)                                                                                                                                                                                                     Traceback (most recent call last):
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\single_main.py", line 84, in <module>
+    writer = get_writer(args, cfg=cfg)
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\trainers\single_trainer.py", line 97, in train
+    self._test()
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\trainers\single_trainer.py", line 182, in _test
+    test_results = self.evaluator.test()
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\evaluators\evaluator.py", line 40, in test
+    return self._create_metrics_dict(self.test_metrics, self.test_loader, self.test_cache)
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\evaluators\evaluator.py", line 45, in _create_metrics_dict
+    metric_result = self.evaluate(loader, metric, cache=cache)
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\evaluators\evaluator.py", line 32, in evaluate
+    return metric_fn(self.module, dataloader, cache=cache, **metric_fn_kwargs)
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\evaluators\metrics.py", line 29, in fid
+    gen_mu, gen_sigma = inception.compute_inception_stats()
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\evaluators\metrics_helpers.py", line 58, in compute_inception_stats
+    feats = self.get_inception_features(im_loader)
+  File "E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\evaluators\metrics_helpers.py", line 49, in get_inception_features
+    batch_feats = self.inception(batch)[0]
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\pytorch_fid\inception.py", line 156, in forward
+    x = block(x)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\container.py", line 215, in forward
+    input = module(input)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torch\nn\modules\module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torchvision\models\inception.py", line 317, in forward
+    return torch.cat(outputs, 1)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\bdb.py", line 92, in trace_dispatch
+    return self.dispatch_return(frame, arg)
+  File "C:\Users\user\miniconda3\envs\UoMH\lib\bdb.py", line 154, in dispatch_return
+    if self.quitting: raise BdbQuit
+bdb.BdbQuit
