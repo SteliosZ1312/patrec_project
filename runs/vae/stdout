@@ -610,4 +610,4 @@ C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torchvision\models\_utils.p
 Missing keys in module: [] Unexpected keys in module: []
 Loaded vae checkpoint `latest' after epoch 100
 Testing {'fid', 'l2_reconstruction_error'} for vae
-Getting generated features:   0%|                                                                                                                                           | 0/421 [00:00<?, ?it/s]
+Getting generated features:   0%|                                                                                                                                           | 0/421 [00:00<?, ?it/s](Pdb) 
