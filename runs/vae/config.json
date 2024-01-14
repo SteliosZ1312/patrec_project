@@ -22,9 +22,10 @@
         "l2_reconstruction_error"
     ],
     "test_metrics": [
-        "l2_reconstruction_error"
+        "l2_reconstruction_error",
+        "fid"
     ],
-    "device": "cuda",
+    "device": "cpu",
     "train_batch_size": 128,
     "valid_batch_size": 128,
     "test_batch_size": 128,

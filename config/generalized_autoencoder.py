@@ -44,7 +44,7 @@ def get_base_config(dataset, standalone):
         "lr_scheduler_gamma": 0.1, # used for step scheduler
 
         "valid_metrics": ["l2_reconstruction_error"],
-        "test_metrics": ["l2_reconstruction_error"],
+        "test_metrics": ["l2_reconstruction_error", "fid"],
 
         "device": "cuda" if torch.cuda.is_available() else "cpu",
 

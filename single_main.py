@@ -80,7 +80,6 @@ else:
     cluster_cfg = process_cfg_args(cluster_cfg, args.cluster_config, args)
     cfg = process_cfg_args(cfg, args.config, args)
 
-
 train_loader, valid_loader, test_loader = get_loaders_from_config(cfg, device)
 writer = get_writer(args, cfg=cfg)
 

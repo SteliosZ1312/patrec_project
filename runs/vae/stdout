@@ -451,3 +451,163 @@ vae l2_reconstruction_error: 21.0594
 Testing {'l2_reconstruction_error'} for vae
 vae l2_reconstruction_error: 21.0594
 Maximum epochs reached. Training of vae complete.
+E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\trainers\single_trainer.py:226: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+----------cfg----------
+{   'flatten': True,
+    'denoising_sigma': None,
+    'dequantize': False,
+    'scale_data': True,
+    'whitening_transform': False,
+    'optimizer': 'adam',
+    'lr': 0.001,
+    'use_lr_scheduler': False,
+    'max_epochs': 100,
+    'max_grad_norm': 10,
+    'conditioning': None,
+    'conditioning_dimension': 0,
+    'early_stopping_metric': None,
+    'max_bad_valid_epochs': None,
+    'make_valid_loader': True,
+    'valid_fraction': 0.1,
+    'lr_scheduler': 'cosine',
+    'lr_scheduler_step': 100,
+    'lr_scheduler_gamma': 0.1,
+    'valid_metrics': ['l2_reconstruction_error'],
+    'test_metrics': ['l2_reconstruction_error'],
+    'device': 'cpu',
+    'train_batch_size': 128,
+    'valid_batch_size': 128,
+    'test_batch_size': 128,
+    'data_root': 'data/',
+    'logdir_root': 'runs/',
+    'class_ind': -1,
+    'transforms': None,
+    'dataset': 'mnist',
+    'model': 'vae',
+    'gae': True,
+    'latent_dim': 20,
+    'single_sigma': True,
+    'decoder_variance_lower_bound': 0,
+    'base_distribution': 'gaussian',
+    'num_prior_components': 10,
+    'distribution_mean_spacing': 1,
+    'encoder_net': 'mlp',
+    'encoder_hidden_dims': [256],
+    'decoder_net': 'mlp',
+    'decoder_hidden_dims': [256],
+    'train_dataset_size': 54000,
+    'data_shape': (1, 28, 28),
+    'data_dim': 784}
+Missing keys in module: [] Unexpected keys in module: []
+Loaded vae checkpoint `latest' after epoch 100
+Testing {'l2_reconstruction_error'} for vae
+vae l2_reconstruction_error: 21.0594
+E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\trainers\single_trainer.py:226: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+----------cfg----------
+{   'flatten': True,
+    'denoising_sigma': None,
+    'dequantize': False,
+    'scale_data': True,
+    'whitening_transform': False,
+    'optimizer': 'adam',
+    'lr': 0.001,
+    'use_lr_scheduler': False,
+    'max_epochs': 100,
+    'max_grad_norm': 10,
+    'conditioning': None,
+    'conditioning_dimension': 0,
+    'early_stopping_metric': None,
+    'max_bad_valid_epochs': None,
+    'make_valid_loader': True,
+    'valid_fraction': 0.1,
+    'lr_scheduler': 'cosine',
+    'lr_scheduler_step': 100,
+    'lr_scheduler_gamma': 0.1,
+    'valid_metrics': ['l2_reconstruction_error'],
+    'test_metrics': ['l2_reconstruction_error'],
+    'device': 'cpu',
+    'train_batch_size': 128,
+    'valid_batch_size': 128,
+    'test_batch_size': 128,
+    'data_root': 'data/',
+    'logdir_root': 'runs/',
+    'class_ind': -1,
+    'transforms': None,
+    'dataset': 'mnist',
+    'model': 'vae',
+    'gae': True,
+    'latent_dim': 20,
+    'single_sigma': True,
+    'decoder_variance_lower_bound': 0,
+    'base_distribution': 'gaussian',
+    'num_prior_components': 10,
+    'distribution_mean_spacing': 1,
+    'encoder_net': 'mlp',
+    'encoder_hidden_dims': [256],
+    'decoder_net': 'mlp',
+    'decoder_hidden_dims': [256],
+    'train_dataset_size': 54000,
+    'data_shape': (1, 28, 28),
+    'data_dim': 784}
+Missing keys in module: [] Unexpected keys in module: []
+Loaded vae checkpoint `latest' after epoch 100
+Testing {'l2_reconstruction_error'} for vae
+vae l2_reconstruction_error: 21.0594
+E:\OneDrive\projects\HMMY\Χ23\PatRec\project\patrec_project\two_step_zoo\trainers\single_trainer.py:226: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torchvision\models\_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\user\miniconda3\envs\UoMH\lib\site-packages\torchvision\models\_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+----------cfg----------
+{   'flatten': True,
+    'denoising_sigma': None,
+    'dequantize': False,
+    'scale_data': True,
+    'whitening_transform': False,
+    'optimizer': 'adam',
+    'lr': 0.001,
+    'use_lr_scheduler': False,
+    'max_epochs': 100,
+    'max_grad_norm': 10,
+    'conditioning': None,
+    'conditioning_dimension': 0,
+    'early_stopping_metric': None,
+    'max_bad_valid_epochs': None,
+    'make_valid_loader': True,
+    'valid_fraction': 0.1,
+    'lr_scheduler': 'cosine',
+    'lr_scheduler_step': 100,
+    'lr_scheduler_gamma': 0.1,
+    'valid_metrics': ['l2_reconstruction_error'],
+    'test_metrics': ['l2_reconstruction_error', 'fid'],
+    'device': 'cpu',
+    'train_batch_size': 128,
+    'valid_batch_size': 128,
+    'test_batch_size': 128,
+    'data_root': 'data/',
+    'logdir_root': 'runs/',
+    'class_ind': -1,
+    'transforms': None,
+    'dataset': 'mnist',
+    'model': 'vae',
+    'gae': True,
+    'latent_dim': 20,
+    'single_sigma': True,
+    'decoder_variance_lower_bound': 0,
+    'base_distribution': 'gaussian',
+    'num_prior_components': 10,
+    'distribution_mean_spacing': 1,
+    'encoder_net': 'mlp',
+    'encoder_hidden_dims': [256],
+    'decoder_net': 'mlp',
+    'decoder_hidden_dims': [256],
+    'train_dataset_size': 54000,
+    'data_shape': (1, 28, 28),
+    'data_dim': 784}
+Missing keys in module: [] Unexpected keys in module: []
+Loaded vae checkpoint `latest' after epoch 100
+Testing {'fid', 'l2_reconstruction_error'} for vae
+Getting generated features:   0%|                                                                                                                                           | 0/421 [00:00<?, ?it/s]
