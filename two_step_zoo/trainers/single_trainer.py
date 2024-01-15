@@ -87,8 +87,8 @@ class BaseTrainer:
         if self.profiler:
             self.prof = torch.profiler.profile(
             activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
-            #schedule=torch.profiler.schedule(wait=1, warmup=1, active=1),
-            on_trace_ready=torch.profiler.tensorboard_trace_handler('./logs/mnist'),
+            schedule=torch.profiler.schedule(wait=1, warmup=1, active=1),
+            on_trace_ready=torch.profiler.tensorboard_trace_handler('./logs'),
             record_shapes=True,
             profile_memory=True,
             with_stack=True,
@@ -117,10 +117,11 @@ class BaseTrainer:
             self.module.train()
 
             if self.profiler: 
-                self.prof.start()
+                self.prof.step()
             self.train_for_epoch()
-            if self.profiler: 
+            if self.profiler and self.epoch == 10 :                               
                 self.prof.stop()
+                return 
             
             
             valid_loss = self._validate()
