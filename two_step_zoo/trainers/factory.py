@@ -14,6 +14,7 @@ def get_single_trainer(
         test_loader,
         evaluator,
         only_test=False,
+        profiler=False
 ):
     return SingleTrainer(
         module=module,
@@ -28,6 +29,7 @@ def get_single_trainer(
         conditioning=cfg["conditioning"],
         evaluator=evaluator,
         only_test=only_test,
+        profiler=profiler,
         epoch_sample_every=cfg.get("epoch_sample_every", math.inf)
     )
 

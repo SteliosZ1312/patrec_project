@@ -37,6 +37,7 @@ class BaseTrainer:
             evaluator=None,
 
             only_test=False,
+            profiler=False
     ):
         self.module = module
 
@@ -81,6 +82,19 @@ class BaseTrainer:
             self.evaluator = evaluator
 
         self.only_test = only_test
+        self.profiler = profiler
+        
+        if self.profiler:
+            self.prof = torch.profiler.profile(
+            activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
+            #schedule=torch.profiler.schedule(wait=1, warmup=1, active=1),
+            on_trace_ready=torch.profiler.tensorboard_trace_handler('./logs/mnist'),
+            record_shapes=True,
+            profile_memory=True,
+            with_stack=True,
+            with_flops=True,
+            with_modules=True
+            )
     
     @property 
     def data_are_images(self): return len(self.module.data_shape) > 1
@@ -102,7 +116,13 @@ class BaseTrainer:
         while self.epoch < self.max_epochs and self.bad_valid_epochs < self.max_bad_valid_epochs:
             self.module.train()
 
+            if self.profiler: 
+                self.prof.start()
             self.train_for_epoch()
+            if self.profiler: 
+                self.prof.stop()
+            
+            
             valid_loss = self._validate()
 
             if self.early_stopping_metric:

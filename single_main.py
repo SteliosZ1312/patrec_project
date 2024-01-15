@@ -26,6 +26,9 @@ parser.add_argument("--model", type=str,
 parser.add_argument("--is-gae", action="store_true",
     help="Indicates that we are training a generalized autoencoder.")
 
+parser.add_argument("--profiler", action="store_true",
+    help="Indicates that we are training a generalized autoencoder.")
+
 #
 parser.add_argument("--load-dir", type=str, default="",
     help="Directory to load from.")
@@ -149,7 +152,8 @@ trainer = get_single_trainer(
     valid_loader=valid_loader,
     test_loader=test_loader,
     evaluator=evaluator,
-    only_test=args.only_test
+    only_test=args.only_test, 
+    profiler=args.profiler
 )
 
 pprint.sorted = lambda x, key=None: x
