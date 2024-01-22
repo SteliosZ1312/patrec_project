@@ -232,6 +232,8 @@ def get_vae_config(dataset, standalone):
         net = "mlp"
     elif "imagenet" in dataset:
         net = "residual"
+    elif "audio-mnist" in dataset:
+        net = "rect_cnn"
     else:
         net = "cnn"
 
@@ -266,6 +268,21 @@ def get_vae_config(dataset, standalone):
             "encoder_stride": [1, 1, 1, 1],
 
             "decoder_net": "cnn",
+            "decoder_hidden_channels": [16, 16, 32, 32],
+            "decoder_kernel_size": [3, 3, 3, 3],
+            "decoder_stride": [1, 1, 1, 1],
+
+            "flatten": False
+        }
+        
+    elif net == "rect_cnn":
+        net_configs = {
+            "encoder_net": "rect_cnn",
+            "encoder_hidden_channels": [32, 32, 16, 16],
+            "encoder_kernel_size": [3, 3, 3, 3],
+            "encoder_stride": [1, 1, 1, 1],
+
+            "decoder_net": "rect_cnn",
             "decoder_hidden_channels": [16, 16, 32, 32],
             "decoder_kernel_size": [3, 3, 3, 3],
             "decoder_stride": [1, 1, 1, 1],
