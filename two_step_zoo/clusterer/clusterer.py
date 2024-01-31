@@ -129,6 +129,7 @@ class Clusterer():
         for cidx,partition in enumerate(self.partitions):
             for split in ["train", "test"]:
                 for label in (partition[split]):
+                    # pdb.set_trace()
                     cluster_to_class_dist[cidx][labels[split][label]] += 1
             for class_label in range(num_classes):
                 self.writer.write_scalar(f"cluster_{cidx}_class_dist", cluster_to_class_dist[cidx][class_label], class_label)

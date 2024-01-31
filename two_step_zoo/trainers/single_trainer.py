@@ -100,6 +100,7 @@ class BaseTrainer:
     def data_are_images(self): return len(self.module.data_shape) > 1
 
     def train(self):
+           
         
         # Log number of trainable params
         if self.module.is_cluster_component:
@@ -197,6 +198,12 @@ class BaseTrainer:
             print(f"{self.module.module_id} {k}: {v/j:.4f} after {self.epoch} epochs")
 
     def _test(self):
+        
+        sample_batch = next(iter(self.train_loader))
+        if sample_batch[0][0].shape == torch.Size([2]):
+            self.sample_2D()
+            
+            
         if self.data_are_images:
             self.sample_and_record()
 
@@ -247,6 +254,39 @@ class BaseTrainer:
             plt.show()
 
             self.writer.write_image(self.module.module_id+"/samples" + str(self.epoch), grid, global_step=self.epoch)
+    
+    def sample_2D(self):
+        NUM_SAMPLES = 1000
+
+        with torch.no_grad():
+            try:
+                samples = self.module.sample(NUM_SAMPLES)
+            except AttributeError:
+                print("No sample method available")
+                return
+            # pdb.set_trace()
+            # imgs.clamp_(self.module.data_min.to(imgs.device), self.module.data_max.to(imgs.device))
+            # grid = torchvision.utils.make_grid(imgs, nrow=GRID_ROWS, pad_value=1, normalize=True, scale_each=True)
+            # grid_permuted = grid.permute((1,2,0))
+
+            # plt.figure()
+            # plt.axis("off")
+            # plt.imshow(grid_permuted.detach().cpu().numpy())
+            # plt.show()
+            
+            # Create a single plot
+            plt.subplots(figsize=(10,10))
+            plt.scatter(samples[:, 0].cpu().numpy(), samples[:, 1].cpu().numpy(), s=10)  # s for marker size
+            plt.title('Scatter Plot of 1000 2D Samples')
+            plt.xlabel('X-axis')
+            plt.ylabel('Y-axis')
+            plt.axis('equal')  # Ensure equal scaling on both axes
+            plt.show()
+
+            # Save the plot using the writer
+            self.writer.write_figure(self.module.module_id + "/samples", plt.gcf(), global_step=self.epoch)
+
+            # self.writer.write_image(self.module.module_id+"/samples" + str(self.epoch), grid, global_step=self.epoch)
 
     def record_dict(self, tag_prefix, value_dict, step, save=False):
 

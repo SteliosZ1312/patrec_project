@@ -9,7 +9,7 @@ from .shared_config import get_shared_config
 from .cluster_config import get_cluster_config
 
 # Add datasets below
-_VALID_DATASETS = ["mnist", "fashion-mnist", "cifar10", "cifar100", "svhn", "celeba", "sphere", "audio-mnist"]
+_VALID_DATASETS = ["mnist", "fashion-mnist", "cifar10", "cifar100", "svhn", "celeba", "sphere", "audio-mnist", "two_moons"]
 
 def parse_config_arg(key_value):
     assert "=" in key_value, "Must specify config items with format `key=value`"

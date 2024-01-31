@@ -283,18 +283,37 @@ def get_2d_data(data, size):
         data = np.stack((x1, x2), 1)
         
     elif data == "two_moons":
-        data = sklearn.datasets.make_moons(n_samples=size, noise=0.05)[0]
+        # data = sklearn.datasets.make_moons(n_samples=size, noise=0.05)[0]
+
+        mixture_component = (np.random.rand(size) > 0.5).astype(int)
+        x1 = np.random.rand(size) + mixture_component - 2*(1 - mixture_component)
+        x2 = 2 * (np.random.rand(size) - 0.5)
+        data = np.stack((x1, x2), 1)
+        # Create labels based on the features
+
+
+        labels = np.where(mixture_component == 0, 0, 1)
+        
+        data_tensor = torch.tensor(data, dtype=torch.float32)
+        labels_tensor = torch.tensor(labels, dtype=torch.long)
+
+        # Combine data and labels tensors into a tuple or a dictionary
+        dataset = (data_tensor, labels_tensor)
 
     else:
         assert False, f"Unknown dataset '{data}'"
 
-    return torch.tensor(data, dtype=torch.get_default_dtype())
+    return dataset
+    # return torch.tensor(dataset, dtype=torch.get_default_dtype())
 
 
 def get_simple_datasets(name):
-    train_dset = SupervisedDataset(name, "train", get_2d_data(name, size=10000))
-    valid_dset = SupervisedDataset(name, "valid", get_2d_data(name, size=1000))
-    test_dset = SupervisedDataset(name, "test", get_2d_data(name, size=5000))
+    train = get_2d_data(name, size=10000)
+    val = get_2d_data(name, size=1000)
+    test = get_2d_data(name, size=5000)
+    train_dset = SupervisedDataset(name, "train", x=train[0], y=train[1])
+    valid_dset = SupervisedDataset(name, "valid", x=val[0], y=val[1])
+    test_dset = SupervisedDataset(name, "test", x=test[0], y=test[1])
     return train_dset, valid_dset, test_dset
 
 

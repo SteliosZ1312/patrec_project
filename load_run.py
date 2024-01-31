@@ -31,8 +31,17 @@ def load_single_module(run_dir):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     train_loader, valid_loader, test_loader = get_loaders_from_config(cfg, device)
 
-    data_dim = 784 if cfg["dataset"] in ["mnist", "fashion-mnist"] else 3072
-    data_shape = (1, 28, 28) if cfg["dataset"] in ["mnist", "fashion-mnist"] else (3, 32, 32)
+    if cfg["dataset"] in ["mnist", "fashion-mnist"]:
+        data_dim = 784 
+        data_shape = (1, 28, 28)
+    elif cfg["dataset"] in ["two_moons"]:
+        data_dim = 2 
+        data_shape = (2,)
+    else:
+        data_dim = 3072 
+        data_shape = (3, 32, 32)
+    # data_dim = 784 if cfg["dataset"] in ["mnist", "fashion-mnist"] else 3072
+    # data_shape = (1, 28, 28) if cfg["dataset"] in ["mnist", "fashion-mnist"] else (3, 32, 32)
     module = get_single_module(
         cfg,
         train_dataset_size=cfg["train_dataset_size"],

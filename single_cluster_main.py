@@ -111,4 +111,32 @@ trainer = get_single_clustering_trainer(
 )
 
 
+
 trainer.train()
+
+
+# import matplotlib.pyplot as plt
+
+# fig, ax = plt.subplots(figsize=(5,5))
+# # Iterate through the DataLoader
+# for batch in train_loader:
+#     # Assuming each batch contains 2D samples
+#     samples = batch[0]
+    
+#     # Scatter plot
+    
+#     plt.scatter(samples[:, 0].numpy(), samples[:, 1].numpy(), s=10, c='royalblue', alpha=0.5)
+
+# # Show the plot
+# fig.savefig('train.png')
+
+# NUM_SAMPLES = 100000
+
+# samples1 = clustering_module.child_modules[0].sample(NUM_SAMPLES)
+# samples2 = clustering_module.child_modules[1].sample(NUM_SAMPLES)
+
+
+# fig, ax = plt.subplots(figsize=(5,5))
+# ax.scatter(samples1[:, 0].detach().numpy(), samples1[:, 1].detach().numpy(), s=10, c='royalblue', alpha=0.5)
+# ax.scatter(samples2[:, 0].detach().numpy(), samples2[:, 1].detach().numpy(), s=10, c='royalblue', alpha=0.5)
+# fig.savefig('d-vae.png')

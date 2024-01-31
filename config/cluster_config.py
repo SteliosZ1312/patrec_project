@@ -4,7 +4,7 @@ def get_cluster_config(dataset):
     return {
         "trainer": "DisjointSequential",
         "cluster_method": "class",
-        "num_clusters": 10,
+        "num_clusters": 2,
         "cluster_norm": 255.,
         "cluster_partitions_save": None,
         "partitions_save": None,
@@ -26,6 +26,6 @@ def get_cluster_config(dataset):
         "memory_efficient": False,
         "module_save_dir": "memory_efficient_dump",
 
-        "valid_metrics": ["l2_reconstruction_error"],
-        "test_metrics": ["fid"]
+        "valid_metrics": [],
+        "test_metrics": []
     }

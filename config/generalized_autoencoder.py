@@ -22,20 +22,20 @@ def get_base_config(dataset, standalone):
         "flatten": True,
         "denoising_sigma": None,
         "dequantize": False,
-        "scale_data": True,
+        "scale_data": False,
         "whitening_transform": False,
 
         "optimizer": "adam",
         "lr": 0.001,
         "use_lr_scheduler": False,
         "max_epochs": 100,
-        "max_grad_norm": 10,
+        "max_grad_norm": 1,
 
         "conditioning": None,
         "conditioning_dimension": 0,
 
-        "early_stopping_metric": None,
-        "max_bad_valid_epochs": None,
+        "early_stopping_metric": "l2_reconstruction_error",
+        "max_bad_valid_epochs": 10,
         "make_valid_loader": True,
         "valid_fraction": 0.1,
 
@@ -44,7 +44,7 @@ def get_base_config(dataset, standalone):
         "lr_scheduler_gamma": 0.1, # used for step scheduler
 
         "valid_metrics": ["l2_reconstruction_error"],
-        "test_metrics": ["l2_reconstruction_error", "fid"],
+        "test_metrics": ["l2_reconstruction_error"],
 
         "device": "cuda" if torch.cuda.is_available() else "cpu",
 
@@ -54,7 +54,7 @@ def get_base_config(dataset, standalone):
 
 
 def get_ae_config(dataset, standalone):
-    net = "mlp" if dataset in ["mnist", "fashion-mnist"] else "cnn"
+    net = "mlp" if dataset in ["mnist", "fashion-mnist", "two_moons"] else "cnn"
 
     ae_base = {
         "latent_dim": 20,
@@ -228,7 +228,7 @@ def get_gan_config(dataset, standalone):
 
 def get_vae_config(dataset, standalone):
 
-    if dataset in ["mnist", "fashion-mnist"]:
+    if dataset in ["mnist", "fashion-mnist", "two_moons"]:
         net = "mlp"
     elif "imagenet" in dataset:
         net = "residual"
@@ -244,8 +244,8 @@ def get_vae_config(dataset, standalone):
 
         "decoder_variance_lower_bound": 0,
 
-        "base_distribution": "gaussian",
-        "num_prior_components": 10,
+        "base_distribution": "gaussian", #"mixture_of_gaussians",
+        "num_prior_components": 1,
         "distribution_mean_spacing": 1
     }
 
