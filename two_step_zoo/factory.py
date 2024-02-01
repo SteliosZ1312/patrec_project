@@ -3,7 +3,7 @@ import pdb
 from nflows.transforms.base import CompositeTransform, MultiscaleCompositeTransform
 from nflows.transforms.reshape import SqueezeTransform
 
-from .neural_networks import MLP, CNN, T_CNN, GaussianMixtureLSTM,ResidualDecoder,ResidualEncoder
+from .neural_networks import MLP, CNN, T_CNN, GaussianMixtureLSTM,ResidualDecoder,ResidualEncoder, R_CNN, RT_CNN
 from .invertible_networks import SimpleNSFTransform
 from .generalized_autoencoder import AutoEncoder, WassersteinAutoEncoder, BiGAN, GAN
 from .density_estimator import NormalizingFlow, EnergyBasedModel, GaussianMixtureLSTMModel
@@ -473,6 +473,23 @@ def get_encoder_decoder(cfg):
             spectral_norm=cfg.get("spectral_norm", False),
             conditioning_dimension=cfg["conditioning_dimension"],
         )
+        
+    elif cfg["encoder_net"] == "rect_cnn":
+        encoder = R_CNN(
+            input_channels=cfg["data_shape"][0],
+            hidden_channels_list=cfg["encoder_hidden_channels"],
+            output_dim=encoder_output_dim,
+            kernel_size=cfg["encoder_kernel_size"],
+            stride=cfg["encoder_stride"],
+            image_height=cfg["data_shape"][1],
+            imade_width=cfg["data_shape"][2],
+            activation=activation_map[cfg.get("encoder_activation", _DEFAULT_ACTIVATION)],
+            final_activation=activation_map[cfg.get("decoder_final_activation", None)] if cfg.get("decoder_final_activation", None) is not None else None,
+            output_split_sizes=encoder_output_split_sizes,
+            noise_dim=cfg.get("noise_dim", 0),
+            spectral_norm=cfg.get("spectral_norm", False),
+            conditioning_dimension=cfg["conditioning_dimension"],
+        )
 
     elif cfg["encoder_net"] == "residual":
         encoder = ResidualEncoder(
@@ -483,6 +500,8 @@ def get_encoder_decoder(cfg):
             norm=NORMMAP[cfg.get("norm", "batchnorm")],
             output_split_sizes=encoder_output_split_sizes,
         )
+
+
 
     else:
         raise ValueError(f"Unknown encoder network type {cfg['encoder_net']}")
@@ -529,6 +548,33 @@ def get_encoder_decoder(cfg):
             single_sigma=cfg.get("single_sigma", False),
             conditioning_dimension=cfg["conditioning_dimension"],
         )
+
+    elif cfg["decoder_net"] == "rect_cnn":
+        if model in ["avb", "vae"]:
+            decoder_sigma_dim = 1 if cfg["single_sigma"] else cfg["data_dim"]
+            decoder_output_channels = cfg["data_shape"][0] + decoder_sigma_dim
+            decoder_output_split_sizes = [cfg["data_shape"][0], decoder_sigma_dim]
+        else:
+            decoder_output_channels = cfg["data_shape"][0]
+            decoder_output_split_sizes = None
+
+        decoder = RT_CNN(
+            input_dim=cfg["latent_dim"],
+            hidden_channels_list=cfg["decoder_hidden_channels"],
+            output_channels=decoder_output_channels,
+            kernel_size=cfg["decoder_kernel_size"],
+            stride=cfg["decoder_stride"],
+            image_height=cfg["data_shape"][1],
+            image_width=cfg["data_shape"][2],
+            activation=activation_map[cfg.get("decoder_activation", _DEFAULT_ACTIVATION)],
+            final_activation=activation_map[cfg.get("decoder_final_activation", None)] if cfg.get("decoder_final_activation", None) is not None else None,
+            norm=NORMMAP[cfg.get("decoder_norm", None)] if cfg.get("decoder_norm", None) is not None else None,
+            norm_args=cfg.get("decoder_norm_args", {}),
+            output_split_sizes=decoder_output_split_sizes,
+            single_sigma=cfg.get("single_sigma", False),
+            conditioning_dimension=cfg["conditioning_dimension"],
+        )    
+    
     
     elif cfg["decoder_net"] == "residual":
         if model in ["avb", "vae"]:

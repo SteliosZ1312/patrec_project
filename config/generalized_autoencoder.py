@@ -238,7 +238,7 @@ def get_vae_config(dataset, standalone):
         net = "cnn"
 
     vae_base = {
-        "latent_dim": 20,
+        "latent_dim": 128,
 
         "single_sigma": True,
 
@@ -278,12 +278,12 @@ def get_vae_config(dataset, standalone):
     elif net == "rect_cnn":
         net_configs = {
             "encoder_net": "rect_cnn",
-            "encoder_hidden_channels": [32, 32, 16, 16],
+            "encoder_hidden_channels": [256, 128, 64, 32],
             "encoder_kernel_size": [3, 3, 3, 3],
             "encoder_stride": [1, 1, 1, 1],
 
             "decoder_net": "rect_cnn",
-            "decoder_hidden_channels": [16, 16, 32, 32],
+            "decoder_hidden_channels": [32, 64, 128, 256],
             "decoder_kernel_size": [3, 3, 3, 3],
             "decoder_stride": [1, 1, 1, 1],
 

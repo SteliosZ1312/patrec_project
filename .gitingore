@@ -2,3 +2,4 @@ __pycache__/
 data/
 profiler_logs/
 test.ipynb
+data/

@@ -122,12 +122,31 @@ def get_raw_image_tensors(dataset_name, train, data_root, class_ind):
 
     return images.to(torch.uint8), labels.to(torch.uint8)
 
-def get_torchvision_datasets(dataset_name, data_root, valid_fraction, class_ind, transforms):
-    images, labels = get_raw_image_tensors(dataset_name, train=True, data_root=data_root, class_ind=class_ind)
+def get_spectrograms(dataset_name, train=True):
+    images = []
+    labels = []
+    dataset_dir = "data/audio-mnist/spectrograms/train" if train else "data/audio-mnist/spectrograms/test"
+    for root, _, file_names in os.walk(dataset_dir):
+        for file_name in file_names:
+            label = int(file_name[0]) 
+            labels.append(label) 
+            file_path = os.path.join(root, file_name)
+            spectrogram = np.load(file_path) # (n_bins, n_frames, 1)
+            images.append(spectrogram)
+    images = np.array(images)
+    images = images[:, np.newaxis, :, :]# -> (N, 1, 100, 64)
+    return torch.tensor(images), torch.tensor(labels) 
 
+def get_torchvision_datasets(dataset_name, data_root, valid_fraction, class_ind, transforms):
+    
+    if dataset_name in ['audio-mnist']:
+        images, labels = get_spectrograms(dataset_name, train=True)
+    else: 
+        images, labels = get_raw_image_tensors(dataset_name, train=True, data_root=data_root, class_ind=class_ind)
+        
     perm = torch.arange(images.shape[0])
     perm = deterministic_shuffle(perm)
-    print("Torchvision dataset first inds of perm:", perm[:5])
+    # print("Torchvision dataset first inds of perm:", perm[:5])
 
     shuffled_images = images[perm]
     shuffled_labels = labels[perm]
@@ -141,9 +160,8 @@ def get_torchvision_datasets(dataset_name, data_root, valid_fraction, class_ind,
     train_dset = image_tensors_to_dataset(dataset_name, "train", train_images, train_labels, transforms)
     valid_dset = image_tensors_to_dataset(dataset_name, "valid", valid_images, valid_labels, transforms)
     
-    test_images, test_labels = get_raw_image_tensors(dataset_name, train=False, data_root=data_root, class_ind=class_ind)
+    test_images, test_labels = get_spectrograms(dataset_name, train=False)
     test_dset = image_tensors_to_dataset(dataset_name, "test", test_images, test_labels, transforms)
-
     return train_dset, valid_dset, test_dset
 
 def get_image_datasets(dataset_name, data_root, make_valid_dset, valid_fraction, class_ind=-1, transforms=None):

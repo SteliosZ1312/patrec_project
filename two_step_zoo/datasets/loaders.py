@@ -53,16 +53,14 @@ def get_loaders(
         class_ind,
         transforms
 ):
-    if dataset in ["celeba", "mnist", "fashion-mnist", "cifar10", "cifar100", "svhn", "audio-mnist] or "imagenet" in dataset:
+    if dataset in ["celeba", "mnist", "fashion-mnist", "cifar10", "cifar100", "svhn", "audio-mnist"] or "imagenet" in dataset:
         train_dset, valid_dset, test_dset = get_image_datasets(dataset, data_root, make_valid_loader, valid_fraction, class_ind, transforms)
 
     elif dataset in ["miniboone", "hepmass", "power", "gas", "bsds300"]:
         train_dset, valid_dset, test_dset = get_tabular_datasets(dataset, data_root)
         
     elif dataset in ["sphere", "klein", "two_moons"]:
-        train_dset, valid_dset, test_dset = get_generated_datasets(dataset)
-        
-
+        train_dset, valid_dset, test_dset = get_generated_datasets(dataset)       
     else:
         raise ValueError(f"Unknown dataset {dataset}")
     

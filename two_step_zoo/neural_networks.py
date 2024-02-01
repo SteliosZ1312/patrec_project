@@ -205,6 +205,7 @@ class T_CNN(BaseCNNClass):
                 image_height, k, s
             )
             output_paddings.append(output_padding)
+
         output_paddings = output_paddings[::-1]
 
         self.fc_layer = nn.Linear(input_dim + conditioning_dimension, hidden_channels_list[0]*image_height**2)
@@ -244,9 +245,7 @@ class T_CNN(BaseCNNClass):
         if self.conditioning_dimension > 0:
             conditioning_vector = idxs_to_one_hot(conditioning, self.conditioning_dimension)
             x = torch.cat((x,conditioning_vector), 1)
-
         x = self.fc_layer(x).reshape(-1, *self.post_fc_shape)
-
         for layer in self.t_cnn_layers:
             x = layer(x)
         net_output = self._get_correct_nn_output_format(x, split_dim=1)
@@ -484,3 +483,198 @@ class ResidualDecoder(BaseNetworkClass):
             return mu, log_sigma.view(-1, 1, 1, 1)
         else:
             return net_output
+
+
+class R_CNN(BaseCNNClass):
+    def __init__(
+            self,
+            input_channels,
+            hidden_channels_list,
+            output_dim,
+            kernel_size,
+            stride,
+            image_height,
+            imade_width,
+            activation,
+            norm=None,
+            norm_args={},
+            output_split_sizes=None,
+            spectral_norm=False,
+            noise_dim=0,
+            final_activation=None,
+            data_shape=None,
+            unflatten=None,
+            conditioning_dimension=0
+    ):
+        super().__init__(hidden_channels_list, stride, kernel_size, output_split_sizes)
+
+        self.conditioning_dimension = conditioning_dimension
+
+        cnn_layers = []
+        prev_channels = input_channels + (1 if conditioning_dimension > 0 else 0)
+        for idx,(hidden_channels, k, s) in enumerate(zip(hidden_channels_list, self.kernel_size, self.stride)):
+            cnn_layers.append(nn.Conv2d(prev_channels, hidden_channels, k, s))
+
+            if norm is not None and idx != len(hidden_channels_list)-1:
+                cnn_layers.append(norm(hidden_channels, **norm_args))
+
+            cnn_layers.append(activation())
+            prev_channels = hidden_channels
+
+            image_height = self._get_new_image_dimension(image_height, k, s)
+            imade_width = self._get_new_image_dimension(imade_width, k, s)
+            # image_height = self._get_new_image_height(image_height, k, s)
+        self.cnn_layers = nn.ModuleList(cnn_layers)
+
+        self.fc_layer = nn.Linear(
+            in_features=prev_channels*image_height*imade_width+noise_dim,
+            out_features=output_dim
+        )
+
+        if spectral_norm: self._apply_spectral_norm()
+
+        self.unflatten = unflatten
+        self.data_shape = data_shape
+
+        self.final_activation = final_activation
+        if self.final_activation is not None:
+            self.final_activation = final_activation()
+
+    def forward(self, x, conditioning=None, eps=None):
+        if self.conditioning_dimension > 0:
+            conditioning_channel = torch.ones_like(x)[:,0,:,:][:,None,:,:]
+            conditioning_channel *= conditioning[:,None,None,None]
+            x = torch.cat((x, conditioning_channel), 1)
+        
+        if self.unflatten:
+            bs = x.shape[0]
+            x = x.reshape(bs,*self.data_shape)
+            
+        for layer in self.cnn_layers:
+            x = layer(x)
+        x = torch.flatten(x, start_dim=1)
+
+        net_in = torch.cat((x, eps), dim=1) if eps is not None else x
+        net_out = self.fc_layer(net_in)
+
+        if self.final_activation is not None:
+            net_out = self.final_activation(net_out)
+
+        return self._get_correct_nn_output_format(net_out, split_dim=1)
+
+    def _get_new_image_height(self, height, kernel, stride):
+        # cf. https://pytorch.org/docs/1.9.1/generated/torch.nn.Conv2d.html
+        # Assume dilation = 1, padding = 0
+        return math.floor((height - kernel)/stride + 1)
+    
+    def _get_new_image_dimension(self, dimension, kernel, stride):
+        return math.floor((dimension - kernel) / stride + 1)
+    
+
+class RT_CNN(BaseCNNClass):
+    def __init__(
+            self,
+            input_dim,
+            hidden_channels_list,
+            output_channels,
+            kernel_size,
+            stride,
+            image_height,
+            image_width,
+            activation,
+            norm=None,
+            norm_args={},
+            output_split_sizes=None,
+            final_activation=None,
+            spectral_norm=False,
+            single_sigma=False,
+            conditioning_dimension=0
+    ):
+        super().__init__(hidden_channels_list, stride, kernel_size, output_split_sizes)
+
+        self.single_sigma = single_sigma
+        self.conditioning_dimension = conditioning_dimension
+
+        if self.single_sigma:
+            # NOTE: In the MLP above, the single_sigma case can be handled by correctly
+            #       specifying output_split_sizes. However, here the first output of the
+            #       network will be of image shape, which more strongly contrasts with the
+            #       desired sigma output of shape (batch_size, 1). We need the additional
+            #       linear layer to project the image-like output to a scalar.
+            self.sigma_output_layer = nn.Linear(output_split_sizes[-1]*image_height*image_width, 1)
+
+        output_paddings = []
+        for _, k, s in zip(hidden_channels_list, self.kernel_size[::-1], self.stride[::-1]):
+            # First need to infer the appropriate number of outputs for the first linear layer
+            image_height, image_width, output_padding = self._get_new_image_dims_and_output_padding(
+                image_height, image_width,
+                k, s
+            )
+            output_paddings.append(output_padding)
+        output_paddings = output_paddings[::-1]
+
+        self.fc_layer = nn.Linear(input_dim + conditioning_dimension, hidden_channels_list[0]*image_height*image_width)
+        self.post_fc_shape = (hidden_channels_list[0], image_height, image_width)
+
+        t_cnn_layers = [activation()]
+        prev_channels = hidden_channels_list[0]
+        for idx,(hidden_channels, k, s, op) in enumerate(zip(
+            hidden_channels_list[1:], self.kernel_size[:-1], self.stride[:-1], output_paddings[:-1]
+        )):
+            t_cnn_layers.append(
+                nn.ConvTranspose2d(prev_channels, hidden_channels, k, s, output_padding=op)
+            )
+
+            if norm is not None and not idx == len(hidden_channels_list) - 1:
+                t_cnn_layers.append(norm(hidden_channels, **norm_args))
+
+            t_cnn_layers.append(activation())
+
+            prev_channels = hidden_channels
+        
+        t_cnn_layers.append(
+            nn.ConvTranspose2d(
+                prev_channels, output_channels, self.kernel_size[-1], self.stride[-1],
+                output_padding=output_paddings[-1]
+            )
+        )
+        self.t_cnn_layers = nn.ModuleList(t_cnn_layers)
+        self.final_activation = final_activation
+        if self.final_activation is not None:
+            self.final_activation = final_activation()
+
+        if spectral_norm: self._apply_spectral_norm()
+
+    def forward(self, x, conditioning=None):
+
+        if self.conditioning_dimension > 0:
+            conditioning_vector = idxs_to_one_hot(conditioning, self.conditioning_dimension)
+            x = torch.cat((x,conditioning_vector), 1)
+
+        x = self.fc_layer(x).reshape(-1, *self.post_fc_shape)
+
+        for layer in self.t_cnn_layers:
+            x = layer(x)
+        net_output = self._get_correct_nn_output_format(x, split_dim=1)
+        if self.final_activation is not None:
+            net_output = self.final_activation(net_output)
+
+        if self.single_sigma:
+            mu, log_sigma_unprocessed = net_output
+            log_sigma = self.sigma_output_layer(log_sigma_unprocessed.flatten(start_dim=1))
+            return mu, log_sigma.view(-1, 1, 1, 1)
+        else:
+            return net_output
+
+    def _get_new_image_dims_and_output_padding(self, height, width, kernel, stride):
+        # cf. https://pytorch.org/docs/1.9.1/generated/torch.nn.ConvTranspose2d.html
+        # Assume dilation = 1, padding = 0
+        output_padding_h = (height - kernel) % stride
+        output_padding_w = (width - kernel) % stride
+
+        max_output_padding = max(output_padding_h, output_padding_w)
+
+        height = (height - kernel - max_output_padding) // stride + 1
+        width = (width - kernel - max_output_padding) // stride + 1
+
+        return height, width, max_output_padding
