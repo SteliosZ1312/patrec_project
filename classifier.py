@@ -16,6 +16,26 @@ import argparse
 from classification_models import *
 from classification_utils import progress_bar, deterministic_shuffle,class_weights
 
+############# MY CODE - DEFINING CLASS WEIGHT FOR ALL DATASETS #############
+
+class_weights_cifar10 = [
+
+]
+
+class_weights_mnist = [
+
+]
+
+class_weights_svhn = [
+
+]
+
+class_weights_fmnist = [
+
+]
+
+############################################################################
+
 import numpy as np
 import pickle
 
@@ -26,7 +46,25 @@ parser.add_argument('--model', default="res18", type=str)
 parser.add_argument('--resume', '-r', action='store_true',
                     help='resume from checkpoint')
 parser.add_argument('--do_weight', default=0, type=int)
+parser.add_argument('--dataset', default='cifar100', type=str)
 args = parser.parse_args()
+
+########## MY CODE 
+
+# Select the appropriate class weights based on the chosen dataset
+if args.dataset == "mnist":
+    class_weights = class_weights_mnist
+elif args.dataset == "fmnist":
+    class_weights = class_weights_fmnist
+elif args.dataset == "cifar10":
+    class_weights = class_weights_cifar10
+elif args.dataset == "cifar100":
+    class_weights = class_weights
+else:
+    raise ValueError("Invalid dataset. Supported datasets are: mnist, fmnist, cifar10, cifar100")
+
+
+##########
 
 num_classes = 100
 max_epochs = 200
@@ -50,10 +88,48 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.5070751592371323, 0.48654887331495095, 0.4409178433670343), (0.2673342858792401, 0.2564384629170883, 0.27615047132568404)),
 ])
 
-trainvalset = torchvision.datasets.CIFAR100(
-    root='./data', train=True, download=True, transform=transform_train)
-testset = torchvision.datasets.CIFAR100(
-    root='./data', train=False, download=True, transform=transform_test)
+# if args.dataset == "mnist":
+#     trainvalset = torchvision.datasets.MNIST(
+#         root='./data', train=True, download=True, transform=transform_train)
+#     testset = torchvision.datasets.MNIST(
+#         root='./data', train=False, download=True, transform=transform_test)
+#     num_classes = 10  # MNIST has 10 classes
+if args.dataset == "mnist":
+    trainvalset = torchvision.datasets.MNIST(
+        root='./data', train=True, download=True, transform=transforms.Compose([
+            transforms.Grayscale(num_output_channels=3),  # Convert to 3 channels
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]))
+    testset = torchvision.datasets.MNIST(
+        root='./data', train=False, download=True, transform=transforms.Compose([
+            transforms.Grayscale(num_output_channels=3),  # Convert to 3 channels
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]))
+    num_classes = 10  # MNIST has 10 classes
+elif args.dataset == "fmnist":
+    trainvalset = torchvision.datasets.FashionMNIST(
+        root='./data', train=True, download=True, transform=transform_train)
+    testset = torchvision.datasets.FashionMNIST(
+        root='./data', train=False, download=True, transform=transform_test)
+    num_classes = 10  # FashionMNIST has 10 classes
+elif args.dataset == "cifar10":
+    trainvalset = torchvision.datasets.CIFAR10(
+        root='./data', train=True, download=True, transform=transform_train)
+    testset = torchvision.datasets.CIFAR10(
+        root='./data', train=False, download=True, transform=transform_test)
+    num_classes = 10  # CIFAR-10 has 10 classes
+elif args.dataset == "cifar100":
+    trainvalset = torchvision.datasets.CIFAR100(
+        root='./data', train=True, download=True, transform=transform_train)
+    testset = torchvision.datasets.CIFAR100(
+        root='./data', train=False, download=True, transform=transform_test)
+    num_classes = 100
+else:
+    raise ValueError("Invalid dataset. Supported datasets are: mnist, fmnist, cifar10")
+
+
 
 N = len(trainvalset.targets)
 train_val_perm = deterministic_shuffle(np.arange(N))
