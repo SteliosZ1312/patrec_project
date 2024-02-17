@@ -67,7 +67,7 @@ else:
 ##########
 
 num_classes = 100
-max_epochs = 200
+max_epochs = 60
 pct_val = 0.001
 early_stopping_patience = 10000
 last_best_epoch = 0
@@ -87,6 +87,8 @@ transform_test = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5070751592371323, 0.48654887331495095, 0.4409178433670343), (0.2673342858792401, 0.2564384629170883, 0.27615047132568404)),
 ])
+
+############# MY CODE - DATALOADING FOR ALL DATASETS #############
 
 # if args.dataset == "mnist":
 #     trainvalset = torchvision.datasets.MNIST(
@@ -129,7 +131,7 @@ elif args.dataset == "cifar100":
 else:
     raise ValueError("Invalid dataset. Supported datasets are: mnist, fmnist, cifar10")
 
-
+##################################################################
 
 N = len(trainvalset.targets)
 train_val_perm = deterministic_shuffle(np.arange(N))
@@ -285,18 +287,18 @@ def test(epoch, loader, split):
         pickle.dump({
             "val_losses": val_losses, 
             "train_losses": train_losses, 
-            "class_accs": class_accs, 
+            "class_accs": class_accs,
             "class_scores": class_scores
         }, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 for epoch in range(start_epoch, start_epoch+max_epochs):
     print('\nEpoch: %d' % epoch)
     
-    if epoch == 60:
+    if epoch == 10:
         update_lr(0.02)
-    elif epoch == 120:
+    elif epoch == 25:
         update_lr(0.004)
-    elif epoch == 160:
+    elif epoch == 40:
         update_lr(0.0008)
 
     
