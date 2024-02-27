@@ -3,9 +3,9 @@ import torch
 def get_base_config(dataset, standalone):
     if standalone:
         standalone_info = {
-            "train_batch_size": 128,
-            "valid_batch_size": 128,
-            "test_batch_size": 128,
+            "train_batch_size": 32,
+            "valid_batch_size": 32,
+            "test_batch_size": 32,
 
             "make_valid_loader": True,
 
@@ -22,20 +22,20 @@ def get_base_config(dataset, standalone):
         "flatten": True,
         "denoising_sigma": None,
         "dequantize": False,
-        "scale_data": False,
+        "scale_data": True,
         "whitening_transform": False,
 
         "optimizer": "adam",
-        "lr": 0.001,
+        "lr": 0.0001,
         "use_lr_scheduler": False,
         "max_epochs": 100,
-        "max_grad_norm": 1,
+        "max_grad_norm": 5,
 
-        "conditioning": None,
-        "conditioning_dimension": 0,
+        "conditioning": "class",
+        "conditioning_dimension": 10,
 
-        "early_stopping_metric": "l2_reconstruction_error",
-        "max_bad_valid_epochs": 10,
+        "early_stopping_metric": None,
+        "max_bad_valid_epochs": None,
         "make_valid_loader": True,
         "valid_fraction": 0.1,
 
@@ -44,7 +44,7 @@ def get_base_config(dataset, standalone):
         "lr_scheduler_gamma": 0.1, # used for step scheduler
 
         "valid_metrics": ["l2_reconstruction_error"],
-        "test_metrics": ["l2_reconstruction_error"],
+        "test_metrics": ["fid"],
 
         "device": "cuda" if torch.cuda.is_available() else "cpu",
 
@@ -244,7 +244,7 @@ def get_vae_config(dataset, standalone):
 
         "decoder_variance_lower_bound": 0,
 
-        "base_distribution": "gaussian", #"mixture_of_gaussians",
+        "base_distribution": "gaussian",
         "num_prior_components": 1,
         "distribution_mean_spacing": 1
     }
@@ -278,12 +278,12 @@ def get_vae_config(dataset, standalone):
     elif net == "rect_cnn":
         net_configs = {
             "encoder_net": "rect_cnn",
-            "encoder_hidden_channels": [256, 128, 64, 32],
+            "encoder_hidden_channels": [512, 256, 128, 64],
             "encoder_kernel_size": [3, 3, 3, 3],
             "encoder_stride": [1, 1, 1, 1],
 
             "decoder_net": "rect_cnn",
-            "decoder_hidden_channels": [32, 64, 128, 256],
+            "decoder_hidden_channels": [64, 128, 256, 512],
             "decoder_kernel_size": [3, 3, 3, 3],
             "decoder_stride": [1, 1, 1, 1],
 

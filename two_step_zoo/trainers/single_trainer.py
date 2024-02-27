@@ -195,7 +195,7 @@ class BaseTrainer:
         self.update_transform_parameters()
 
         for k, v in full_loss_dict.items():
-            print(f"{self.module.module_id} {k}: {v/j:.4f} after {self.epoch} epochs")
+            print(f"{self.module.module_id} {k}: {v/(j+1):.4f} after {self.epoch} epochs")
 
     def _test(self):
         

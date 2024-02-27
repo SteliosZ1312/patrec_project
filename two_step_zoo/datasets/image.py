@@ -3,6 +3,7 @@ from pathlib import Path
 import pdb
 from typing import Any, Tuple
 import pickle
+from scandir import scandir, walk
 
 import pandas as pd
 import PIL
@@ -126,20 +127,22 @@ def get_spectrograms(dataset_name, train=True):
     images = []
     labels = []
     dataset_dir = "data/audio-mnist/spectrograms/train" if train else "data/audio-mnist/spectrograms/test"
-    for root, _, file_names in os.walk(dataset_dir):
-        for file_name in file_names:
-            label = int(file_name[0]) 
+    for root, _, file_names in walk(dataset_dir):
+        for file_name in tqdm(file_names, desc="Loading spectrograms", unit=" files"):
+            # label = int(file_name[0]) 
+            label = int(file_name[2:4]) -1 if train else int(file_name[0]) 
+            print(label)
             labels.append(label) 
             file_path = os.path.join(root, file_name)
             spectrogram = np.load(file_path) # (n_bins, n_frames, 1)
             images.append(spectrogram)
     images = np.array(images)
+    print(images.shape)
     images = images[:, np.newaxis, :, :]# -> (N, 1, 100, 64)
     return torch.tensor(images), torch.tensor(labels) 
 
 def get_torchvision_datasets(dataset_name, data_root, valid_fraction, class_ind, transforms):
-    
-    if dataset_name in ['audio-mnist']:
+    if dataset_name == 'audio-mnist':
         images, labels = get_spectrograms(dataset_name, train=True)
     else: 
         images, labels = get_raw_image_tensors(dataset_name, train=True, data_root=data_root, class_ind=class_ind)

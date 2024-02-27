@@ -3,8 +3,8 @@ from datetime import datetime
 def get_cluster_config(dataset):
     return {
         "trainer": "DisjointSequential",
-        "cluster_method": "class",
-        "num_clusters": 2,
+        "cluster_method": "agglomerative",
+        "num_clusters": 3,
         "cluster_norm": 255.,
         "cluster_partitions_save": None,
         "partitions_save": None,
@@ -27,5 +27,5 @@ def get_cluster_config(dataset):
         "module_save_dir": "memory_efficient_dump",
 
         "valid_metrics": [],
-        "test_metrics": []
+        "test_metrics": ['fid']
     }

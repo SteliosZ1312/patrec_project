@@ -247,8 +247,10 @@ class TwoStepComponent(nn.Module):
         if self.dequantize:
             data = data + torch.rand_like(data)
         if self.scale_data:
-            denominator = self.abs_data_max + 1 if self.dequantize else self.abs_data_max
-            data = data / denominator
+            data = data - self.data_min
+            data = data / (self.data_max - self.data_min) 
+            # denominator = self.abs_data_max + 1 if self.dequantize else self.abs_data_max
+            # data = data / denominator
         elif self.whitening_transform:
             data = data - self.whitening_mu
             data = data / self.whitening_sigma
@@ -267,7 +269,9 @@ class TwoStepComponent(nn.Module):
             data = torch.sigmoid(data)
             
         if self.scale_data:
-            data = data * (self.abs_data_max + self.dequantize)
+            data = data * (self.data_max - self.data_min) 
+            data = data + self.data_min
+            # data = data * (self.abs_data_max + self.dequantize)
         elif self.whitening_transform:
             data = data * self.whitening_sigma
             data = data + self.whitening_mu
