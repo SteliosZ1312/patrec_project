@@ -1,4 +1,4 @@
-# Project Title: Results Reproduction and Extension for Union of Manifolds Hypothesis
+# Results Reproduction and Extension for Union of Manifolds Hypothesis
 
 ## Introduction
 
